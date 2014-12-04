@@ -1,0 +1,7 @@
+{
+  "name": "i18n-msg#gh-pages",
+  "private": true,
+  "dependencies": {
+    "i18n-msg": "ebidel/i18n-msg#master"
+  }
+}
