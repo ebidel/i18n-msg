@@ -1,0 +1,37 @@
+<!doctype html>
+<!-- Copyright Eric Bidelman <ebidel@gmail.com> -->
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <title>i18n-msg elemetn Demo</title>
+
+  <script src="../webcomponentsjs/webcomponents.min.js"></script>
+  <link rel="import" href="i18n-msg.html">
+
+</head>
+<body unresolved>
+
+<p>"Days" in selected language is: <b><i18n-msg msgid="days">PLACEHOLDER_STRING</i18n-msg></b>!</p>
+<p>"Hours" in selected language is: <b><i18n-msg msgid="hours">PLACEHOLDER_STRING</i18n-msg></b>!</p>
+<p>"Minutes" in selected language is: <b><i18n-msg msgid="minutes">PLACEHOLDER_STRING</i18n-msg></b>!</p>
+
+<p>Example fallback text when a message id isn't found: <i18n-msg msgid="UNKNOWN_MSG_ID">PLACEHOLDER_STRING</i18n-msg></b></p>
+
+<select id="selector">
+  <option selected>en</option>
+  <option>es</option>
+  <option>fr</option>
+</select>
+
+<script>
+  var selector = document.querySelector('#selector');
+
+  I18nMsg.lang = selector.value || document.documentElement.lang || 'en';
+
+  selector.addEventListener('change', function() {
+    document.documentElement.lang = this.value;
+    I18nMsg.lang = this.value;
+  });
+</script>
+</body>
+</html>

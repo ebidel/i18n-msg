@@ -1,0 +1,59 @@
+<!--
+    @license
+    Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+    This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+    The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+    The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+    Code distributed by Google as part of the polymer project is also
+    subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <title>i18n-msg</title>
+
+  <script src="../../webcomponentsjs/webcomponents.min.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+
+  <!-- Step 1: import the element to test -->
+  <link rel="import" href="../i18n-msg.html">
+</head>
+<body>
+
+  <i18n-msg msgid="days" id="days" messagesDir="../_locales">PLACEHOLDER_STRING</i18n-msg>
+
+  <script>
+
+    I18nMsg.lang = 'es';
+
+    suite('<i18n-element>', function() {
+
+      var el = document.querySelector('#days');
+
+      test('defines the "msgid" property', function() {
+        assert.equal(el.msgid, 'days');
+      });
+
+      test('messageDir can be set', function() {
+        assert.equal(el.messagesDir, '../_locales');
+      });
+
+      test('.language property matches I18nMsg.lang"', function() {
+        assert.equal(el.language, I18nMsg.lang);
+      });
+
+      test('.textContent was updated to localize message', function() {
+        assert.equal(el.textContent, 'dias');
+      });
+
+      test('.locales property was populated', function() {
+        assert.isTrue(I18nMsg.lang in el.locales);
+      });
+
+    });
+  </script>
+
+</body>
+</html>
