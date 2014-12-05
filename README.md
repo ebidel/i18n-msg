@@ -1,4 +1,4 @@
-i18n-mg
+i18n-msg
 ============
 
 Custom element to do localization (i18n) message string replacement.
