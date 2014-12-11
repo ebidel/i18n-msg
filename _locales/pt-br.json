@@ -1,0 +1,14 @@
+{
+  "days": {
+    "description": "...",
+    "message": "Dias"
+  },
+  "hours": {
+    "description": "...",
+    "message": "Horas"
+  },
+  "minutes": {
+    "description": "...",
+    "message": "Minutos"
+  }
+}
