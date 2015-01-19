@@ -60,6 +60,8 @@ If an appropriate message file can't be found, the `textContent` of the element 
 
   var instances = [];
 
+  var fetching_ = false; /* If if there's an outstanding XHR fetching a locale file. */
+
   Polymer({
 
     /**
@@ -122,9 +124,11 @@ If an appropriate message file can't be found, the `textContent` of the element 
     },
 
     languageChanged: function() {
-      if (!this.language || this.locales[this.language]) {
+      if (!this.language || this.locales[this.language] || fetching_) {
         return;
       }
+
+      fetching_ = true;
 
       var url = this.messagesDir + '/' + this.language + '.json';
 
@@ -144,6 +148,8 @@ If an appropriate message file can't be found, the `textContent` of the element 
         this.locales[this.language] = resp; // cache this locale.
 
         this.notifyInstances();
+
+        fetching_ = false;
       }.bind(this);
       xhr.send();
     },
@@ -159,6 +165,20 @@ If an appropriate message file can't be found, the `textContent` of the element 
 
         instance.innerHTML = instance.locales[instance.language][instance.msgid].message;
       }
+    },
+
+    /**
+     * Returns a message in the current locale (set by window.I18nMsg.lang).
+     * @method getMsg
+     * @param {string} msgId Id of the message.
+     * @return {string|null} Translated message or `null` if not found.
+     */
+    getMsg: function(msgId) {
+      var lang = this.locales[this.language];
+      if (lang && lang[msgId]) {
+        return lang[msgId].message;
+      }
+      return null;
     }
 
   });
