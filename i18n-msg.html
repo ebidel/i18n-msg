@@ -19,8 +19,8 @@ not needed if the browser supports HTML Imports, natively.
 ### Message files
 
 Setting a language instructs `<i18n-msg>` to read message ids from a predefined
-file on your server. For example, `I18nMsg.lang = 'es'` will use `_locales/es.json`.
-`I18nMsg.lang = 'fr'` would use message strings from `_locales/fr.json`.
+file on your server. For example, `I18nMsg.lang = 'es'` will use `locales/es.json`.
+`I18nMsg.lang = 'fr'` would use message strings from `locales/fr.json`.
 
 The directory name can be configured by using the `messagesDir` attribute, but the file
 cannot. `<i18n-msg>` will always attempt to use messages from `<messagesDir>/<LANG_YOU_SET>.json`.
@@ -78,9 +78,9 @@ If an appropriate message file can't be found, the `textContent` of the element 
      *
      * @attribute messagesDir
      * @type string
-     * @default '_locales'
+     * @default 'locales'
      */
-    messagesDir: '_locales',
+    messagesDir: 'locales',
 
     /**
      * The set language being used.
