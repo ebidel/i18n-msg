@@ -119,7 +119,7 @@ If an appropriate message file can't be found, the `textContent` of the element 
     attached: function() {
       var msg = this.locales[this.language] && this.locales[this.language][this.msgid];
       if (msg && msg.message) {
-        this.innerHTML = msg.message;
+        this.innerText = msg.message;
       }
     },
 
@@ -163,7 +163,7 @@ If an appropriate message file can't be found, the `textContent` of the element 
           continue;
         }
 
-        instance.innerHTML = instance.locales[instance.language][instance.msgid].message;
+        instance.innerText = instance.locales[instance.language][instance.msgid].message;
       }
     },
 
