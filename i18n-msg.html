@@ -104,14 +104,12 @@ If an appropriate message file can't be found, the `textContent` of the element 
     ready: function() {
       this.language = I18nMsg.lang;
 
-      // First time an instance is created, observe window.I18nMsg.lang changes
+      // Have instances observe window.I18nMsg.lang changes
       // and go fetch the localized messages.json file.
-      if (!instances.length) {
-        var observer = new PathObserver(window.I18nMsg, 'lang');
-        observer.open(function(newValue, oldValue) {
-          this.language = newValue;
-        }.bind(this));
-      }
+      var observer = new PathObserver(window.I18nMsg, 'lang');
+      observer.open(function(newValue, oldValue) {
+        this.language = newValue;
+      }.bind(this));
 
       instances.push(this);
     },
@@ -124,7 +122,12 @@ If an appropriate message file can't be found, the `textContent` of the element 
     },
 
     languageChanged: function() {
-      if (!this.language || this.locales[this.language] || fetching_) {
+      // Don't fetch .json file if there's it has already been
+      // fetched or another instance is already trying to.
+      if (this.language && this.locales[this.language] && !fetching_) {
+        this.updateElementMessage();
+        return;
+      } else if (!this.language || this.locales[this.language] || fetching_) {
         return;
       }
 
@@ -154,6 +157,11 @@ If an appropriate message file can't be found, the `textContent` of the element 
       xhr.send();
     },
 
+    updateElementMessage: function(opt_instance) {
+      var instance = opt_instance || this;
+      instance.innerHTML = instance.locales[instance.language][instance.msgid].message;
+    },
+
     notifyInstances: function() {
       for (var i = 0, instance; instance = instances[i]; ++i) {
         instance.language = I18nMsg.lang;
@@ -163,7 +171,7 @@ If an appropriate message file can't be found, the `textContent` of the element 
           continue;
         }
 
-        instance.innerHTML = instance.locales[instance.language][instance.msgid].message;
+        this.updateElementMessage(instance);
       }
     },
 
