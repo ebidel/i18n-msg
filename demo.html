@@ -30,7 +30,10 @@
   var selector = document.querySelector('#selector');
   var input = document.querySelector('#input');
 
-  I18nMsg.lang = selector.value || document.documentElement.lang || 'en';
+  // Event is only needed when running under the HTMLImports polyfill.
+  document.addEventListener('HTMLImportsLoaded', function() {
+    I18nMsg.lang = selector.value || document.documentElement.lang || 'en';
+  });
 
   selector.addEventListener('change', function() {
     document.documentElement.lang = this.value;
