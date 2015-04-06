@@ -178,10 +178,12 @@ If an appropriate message file can't be found, the `textContent` of the element 
     /**
      * Returns a message in the current locale (set by window.I18nMsg.lang).
      * @method getMsg
-     * @param {string} msgId Id of the message.
+     * @param {string=} opt_msgId Optional message id to lookup. If left off,
+     * the instance's `msgid` property is used.
      * @return {string|null} Translated message or `null` if not found.
      */
-    getMsg: function(msgId) {
+    getMsg: function(opt_msgId) {
+      var msgId = opt_msgId || this.msgid;
       var lang = this.locales[this.language];
       if (lang && lang[msgId]) {
         return lang[msgId].message;
