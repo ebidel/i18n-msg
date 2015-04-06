@@ -1,6 +1,6 @@
 {
   "name": "i18n-msg",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "authors": [
     "Eric Bidelman <ebidel@>"
   ],
@@ -22,9 +22,13 @@
     "/tests/"
   ],
   "dependencies": {
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.6.0",
     "polymer": "Polymer/polymer#^0.5.5"
   },
   "devDependencies": {
-    "web-component-tester": "Polymer/web-component-tester#^v2.0.1"
+    "web-component-tester": "Polymer/web-component-tester#master"
+  },
+  "resolutions": {
+    "webcomponentsjs": "^0.6.0"
   }
 }
