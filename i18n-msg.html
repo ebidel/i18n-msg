@@ -159,7 +159,11 @@ If an appropriate message file can't be found, the `textContent` of the element 
 
     updateElementMessage: function(opt_instance) {
       var instance = opt_instance || this;
-      instance.innerHTML = instance.locales[instance.language][instance.msgid].message;
+
+      var msg = instance.locales[instance.language][instance.msgid];
+      if (msg && msg.message) {
+        instance.innerHTML = msg.message;
+      }
     },
 
     notifyInstances: function() {
