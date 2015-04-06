@@ -11,7 +11,7 @@
 </head>
 <body unresolved>
 
-<p>"Days" in selected language is: <b><i18n-msg msgid="days">PLACEHOLDER_STRING</i18n-msg></b>!</p>
+<p>"Days" in selected language is: <b><i18n-msg id="daysMsgEl" msgid="days">PLACEHOLDER_STRING</i18n-msg></b>!</p>
 <p>"Hours" in selected language is: <b><i18n-msg msgid="hours">PLACEHOLDER_STRING</i18n-msg></b>!</p>
 <p>"Minutes" in selected language is: <b><i18n-msg msgid="minutes">PLACEHOLDER_STRING</i18n-msg></b>!</p>
 
@@ -24,14 +24,22 @@
   <option>pt-BR</option>
 </select>
 
+<p>Example of updating an attribute: <input id="input" placeholder="Days"></p>
+
 <script>
   var selector = document.querySelector('#selector');
+  var input = document.querySelector('#input');
 
   I18nMsg.lang = selector.value || document.documentElement.lang || 'en';
 
   selector.addEventListener('change', function() {
     document.documentElement.lang = this.value;
     I18nMsg.lang = this.value;
+  });
+
+  document.addEventListener('i18n-language-ready', function(e) {
+    var daysMsgEl = document.querySelector('#daysMsgEl');
+    input.placeholder = daysMsgEl.getMsg(daysMsgEl.msgid);
   });
 </script>
 <script>

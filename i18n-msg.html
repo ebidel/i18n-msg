@@ -14,7 +14,7 @@ To set the language across your site, define `I18nMsg.lang` in your main page:
 
 <b>Note:</b> this is done in `HTMLImportsLoaded` so `I18nMsg` will be defined by
 the time you set `I18nMsg.lang`. This timing is necessary under the polyfill and is
-not needed if the browser supports HTML Imports, natively.
+<b>not needed if the browser supports HTML Imports</b>, natively.
 
 ### Message files
 
@@ -46,8 +46,23 @@ If an appropriate message file can't be found, the `textContent` of the element 
       </body>
     </html>
 
+### Gettting a message:
+
+    // No argument returns the instance's message:
+    document.querySelector('i18n-msg').getMessage();
+
+    // Get a message by an id:
+    document.querySelector('i18n-msg').getMessage('days');
+
 @element i18n-msg
-@homepage http://ebidel.github.io/i18n-msg
+@homepage https://ebidel.github.io/i18n-msg
+-->
+<!--
+Fired when the set language is ready.
+
+@event i18n-language-ready
+@param {Object} detail
+@param {string} detail.language Object full of messages for the set language.
 -->
 <polymer-element name="i18n-msg" attributes="msgid messagesDir">
 <script>
@@ -61,6 +76,8 @@ If an appropriate message file can't be found, the `textContent` of the element 
   var instances = [];
 
   var fetching_ = false; /* If if there's an outstanding XHR fetching a locale file. */
+
+  var numInstancesUpdated_ = 0;
 
   Polymer({
 
@@ -108,6 +125,7 @@ If an appropriate message file can't be found, the `textContent` of the element 
       // and go fetch the localized messages.json file.
       var observer = new PathObserver(window.I18nMsg, 'lang');
       observer.open(function(newValue, oldValue) {
+        numInstancesUpdated_ = 0;
         this.language = newValue;
       }.bind(this));
 
@@ -122,10 +140,17 @@ If an appropriate message file can't be found, the `textContent` of the element 
     },
 
     languageChanged: function() {
-      // Don't fetch .json file if there's it has already been
+      // Don't fetch .json file if it has already been
       // fetched or another instance is already trying to.
       if (this.language && this.locales[this.language] && !fetching_) {
+        // Send one signal that language changed to outside.
+        if (numInstancesUpdated_ == instances.length - 1) {
+          this.fire('i18n-language-ready', {langauge: this.language});
+        }
+
         this.updateElementMessage();
+        numInstancesUpdated_++;
+
         return;
       } else if (!this.language || this.locales[this.language] || fetching_) {
         return;
@@ -153,6 +178,8 @@ If an appropriate message file can't be found, the `textContent` of the element 
         this.notifyInstances();
 
         fetching_ = false;
+
+        this.fire('i18n-language-ready', {langauge: this.language});
       }.bind(this);
       xhr.send();
     },
@@ -180,7 +207,7 @@ If an appropriate message file can't be found, the `textContent` of the element 
     },
 
     /**
-     * Returns a message in the current locale (set by window.I18nMsg.lang).
+     * Returns a message in the current locale (set by `window.I18nMsg.lang`).
      * @method getMsg
      * @param {string=} opt_msgId Optional message id to lookup. If left off,
      * the instance's `msgid` property is used.
