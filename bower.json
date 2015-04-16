@@ -23,7 +23,8 @@
   ],
   "dependencies": {
     "webcomponentsjs": "webcomponents/webcomponentsjs#^0.6.0",
-    "polymer": "Polymer/polymer#^0.5.5"
+    "polymer": "Polymer/polymer#^0.8.0-rc.4",
+    "observer-js": "Polymer/observe-js"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#master"
