@@ -145,7 +145,7 @@ Fired when the set language is ready.
       if (this.language && this.locales[this.language] && !fetching_) {
         // Send one signal that language changed to outside.
         if (numInstancesUpdated_ == instances.length - 1) {
-          this.fire('i18n-language-ready', {langauge: this.language});
+          this.fire('i18n-language-ready', {language: this.language});
         }
 
         this.updateElementMessage();
@@ -179,7 +179,7 @@ Fired when the set language is ready.
 
         fetching_ = false;
 
-        this.fire('i18n-language-ready', {langauge: this.language});
+        this.fire('i18n-language-ready', {language: this.language});
       }.bind(this);
       xhr.send();
     },
