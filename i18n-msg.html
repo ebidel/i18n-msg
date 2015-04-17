@@ -162,6 +162,10 @@ Fired when the set language is ready.
             },
 
             attached: function () {
+                if (!this.msgid) {
+                    this.msgid = this.innerHTML;
+                }
+
                 var msg = this.locales[this.language] && this.locales[this.language][this.msgid];
                 if (msg && msg.message) {
                     this.innerHTML = msg.message;
