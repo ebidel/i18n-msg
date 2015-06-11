@@ -1,4 +1,5 @@
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="observer.html">
 
 <!-- Copyright Eric Bidelman <ebidel@gmail.com> -->
 
@@ -22,8 +23,8 @@ Setting a language instructs `<i18n-msg>` to read message ids from a predefined
 file on your server. For example, `I18nMsg.lang = 'es'` will use `locales/es.json`.
 `I18nMsg.lang = 'fr'` would use message strings from `locales/fr.json`.
 
-The directory name can be configured by using the `messagesDir` attribute, but the file
-cannot. `<i18n-msg>` will always attempt to use messages from `<messagesDir>/<LANG_YOU_SET>.json`.
+The directory name can be configured by using the `messagesUrl` attribute, but the file
+cannot. `<i18n-msg>` will always attempt to use messages from `<messagesUrl>/<LANG_YOU_SET>.json`.
 
 <b>Note:</b> - message files are read once and reused for all instances of `<i18n-msg>`.
 
@@ -46,7 +47,7 @@ If an appropriate message file can't be found, the `textContent` of the element 
       </body>
     </html>
 
-### Gettting a message:
+### Getting a message:
 
     // No argument returns the instance's message:
     document.querySelector('i18n-msg').getMessage();
@@ -64,166 +65,209 @@ Fired when the set language is ready.
 @param {Object} detail
 @param {string} detail.language Object full of messages for the set language.
 -->
-<polymer-element name="i18n-msg" attributes="msgid messagesDir">
+<dom-module id="i18n-msg">
+</dom-module>
 <script>
-(function() {
+  (function () {
 
-  window.I18nMsg = window.I18nMsg || {
-    lang: null,
-    locales: {}
-  };
+    window.I18nMsg = window.I18nMsg || {
+      lang: null,
+      url: 'locales',
+      locales: {}
+    };
 
-  var instances = [];
+    var _instances = []; /* Holds all i18n-msg elements to have them easily updated with translation messages. */
 
-  var fetching_ = false; /* If if there's an outstanding XHR fetching a locale file. */
+    var _fetching = false; /* If if there's an outstanding XHR fetching a locale file. */
 
-  var numInstancesUpdated_ = 0;
+    var _numInstancesUpdated = 0;
 
-  Polymer({
+    Polymer({
+      is: 'i18n-msg',
 
-    /**
-     * The message id (key) for this message.
-     *
-     * @attribute msgid
-     * @type string
-     * @default null
-     */
-    msgid: null,
+      properties: {
+        /**
+         * The message id (key) for this message.
+         *
+         * @attribute msgid
+         * @type string
+         * @default null
+         */
+        msgid: {
+          type: String,
+          value: null
+        },
 
-    /**
-     * The folder name where the localized `<lang>.json` files are located.
-     *
-     * @attribute messagesDir
-     * @type string
-     * @default 'locales'
-     */
-    messagesDir: 'locales',
+        /**
+         * The language being used.
+         *
+         * @property language
+         * @type string
+         * @default null
+         * @readonly
+         */
+        language: {
+          type: String,
+          value: null,
+          observer: 'languageChanged',
+          readOnly: true
+        },
 
-    /**
-     * The set language being used.
-     *
-     * @property language
-     * @type string
-     * @default null
-     * @readonly
-     */
-    language: null,
-
-    /**
-     * An object containing the set of known language locales that have been loaded.
-     *
-     * @property locales
-     * @type object
-     * @default {}
-     */
-    locales: I18nMsg.locales, // static
-
-    ready: function() {
-      this.language = I18nMsg.lang;
-
-      // Have instances observe window.I18nMsg.lang changes
-      // and go fetch the localized messages.json file.
-      var observer = new PathObserver(window.I18nMsg, 'lang');
-      observer.open(function(newValue, oldValue) {
-        numInstancesUpdated_ = 0;
-        this.language = newValue;
-      }.bind(this));
-
-      instances.push(this);
-    },
-
-    attached: function() {
-      var msg = this.locales[this.language] && this.locales[this.language][this.msgid];
-      if (msg && msg.message) {
-        this.innerHTML = msg.message;
-      }
-    },
-
-    languageChanged: function() {
-      // Don't fetch .json file if it has already been
-      // fetched or another instance is already trying to.
-      if (this.language && this.locales[this.language] && !fetching_) {
-        // Send one signal that language changed to outside.
-        if (numInstancesUpdated_ == instances.length - 1) {
-          this.fire('i18n-language-ready', {langauge: this.language});
+        /**
+         * The folder name where the localized `<lang>.json` files are located.
+         * Overrides `window.I18nMsg` if not `null`.
+         *
+         * @property messagesUrl
+         * @type string
+         * @default null
+         */
+        messagesUrl: {
+          type: String,
+          value: null
         }
+      },
 
-        this.updateElementMessage();
-        numInstancesUpdated_++;
+      /**
+       * An object containing the set of known language locales that have been loaded.
+       *
+       * @property locales
+       * @type object
+       * @default {}
+       */
+      locales: I18nMsg.locales, // static
 
-        return;
-      } else if (!this.language || this.locales[this.language] || fetching_) {
-        return;
-      }
+      ready: function() {
+        this._setLanguage(I18nMsg.lang);
+        this.messagesUrl = I18nMsg.url;
 
-      fetching_ = true;
+        // Have instances observe window.I18nMsg.lang changes
+        // and go fetch the localized messages.json file.
+        var observerLang = new PathObserver(window.I18nMsg, 'lang');
+        observerLang.open(function (newValue, oldValue) {
+          _numInstancesUpdated = 0;
+          this._setLanguage(newValue);
+        }.bind(this));
 
-      var url = this.messagesDir + '/' + this.language + '.json';
+        // Have instances observe window.I18nMsg.lang changes
+        // and go fetch the localized messages.json file.
+        var observerUrl = new PathObserver(window.I18nMsg, 'url');
+        observerUrl.open(function (newValue, oldValue) {
+          _numInstancesUpdated = 0;
+          this.messagesUrl = newValue;
 
-      var xhr = new XMLHttpRequest();
-      xhr.open('GET', url);
-      xhr.onload = function(e) {
-        if (e.target.status != 200) {
+          if (!this.language || _fetching) {
+            return;
+          }
+
+          this.fetchLanguage();
+        }.bind(this));
+
+        _instances.push(this);
+      },
+
+      attached: function() {
+        var msg = this.locales[this.language] && this.locales[this.language][this.msgid];
+        if (msg && msg.message) {
+          this.innerHTML = msg.message;
+        }
+      },
+
+      /**
+       * The `i18n-language-ready` is fired after the locale was fetched and all `<i18n-msg>` elements were updated.
+       *
+       * @event i18n-language-ready
+       * @detail {{language: String}}
+       */
+
+      languageChanged: function() {
+        // Don't fetch .json file if it has already been
+        // fetched or another instance is already trying to.
+        if (this.language && this.locales[this.language] && !_fetching) {
+          // Send one signal that language changed to outside.
+          if (_numInstancesUpdated == _instances.length - 1) {
+            this.fire('i18n-language-ready', {language: this.language});
+          }
+
+          this.updateElementMessage();
+          _numInstancesUpdated++;
+
+          return;
+        } else if (!this.language || this.locales[this.language] || _fetching) {
           return;
         }
 
-        var resp = JSON.parse(e.target.response);
-        if (!this.msgid in resp) {
-          console.warn(this.localName + ': "' + this.msgid + '" message id was not found in ' + url);
-          return;
+        this.fetchLanguage();
+      },
+
+      fetchLanguage: function() {
+        _fetching = true;
+
+        var url = this.messagesUrl + '/' + this.language + '.json';
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url);
+        xhr.onload = function(e) {
+          if (e.target.status != 200) {
+            _fetching = false;
+            return;
+          }
+
+          var resp = JSON.parse(e.target.response);
+          if (!this.msgid in resp) {
+            console.warn(this.localName + ': "' + this.msgid + '" message id was not found in ' + url);
+            return;
+          }
+
+          this.locales[this.language] = resp; // cache this locale.
+
+          this.notifyInstances();
+
+          _fetching = false;
+
+          this.fire('i18n-language-ready', {language: this.language});
+        }.bind(this);
+        xhr.send();
+      },
+
+      updateElementMessage: function(opt_instance) {
+        var instance = opt_instance || this;
+
+        var msg = instance.locales[instance.language][instance.msgid];
+        if (msg && msg.message) {
+          instance.innerHTML = msg.message;
         }
+      },
 
-        this.locales[this.language] = resp; // cache this locale.
+      notifyInstances: function() {
+        for (var i = 0, instance; instance = _instances[i]; ++i) {
+          instance.language = I18nMsg.lang;
 
-        this.notifyInstances();
+          if (!instance.locales[instance.language][instance.msgid]) {
+            console.warn(this.localName + ': "' + instance.msgid + '" message id was not found');
+            continue;
+          }
 
-        fetching_ = false;
-
-        this.fire('i18n-language-ready', {langauge: this.language});
-      }.bind(this);
-      xhr.send();
-    },
-
-    updateElementMessage: function(opt_instance) {
-      var instance = opt_instance || this;
-
-      var msg = instance.locales[instance.language][instance.msgid];
-      if (msg && msg.message) {
-        instance.innerHTML = msg.message;
-      }
-    },
-
-    notifyInstances: function() {
-      for (var i = 0, instance; instance = instances[i]; ++i) {
-        instance.language = I18nMsg.lang;
-
-        if (!instance.locales[instance.language][instance.msgid]) {
-          console.warn(this.localName + ': "' + instance.msgid + '" message id was not found');
-          continue;
+          this.updateElementMessage(instance);
         }
+      },
 
-        this.updateElementMessage(instance);
+      /**
+       * Returns a message in the current locale (set by `window.I18nMsg.lang`).
+       * @method getMsg
+       * @param {string=} opt_msgId Optional message id to lookup. If left off,
+       * the instance's `msgid` property is used.
+       * @return {string|null} Translated message or `null` if not found.
+       */
+      getMsg: function(opt_msgId) {
+        var msgId = opt_msgId || this.msgid;
+        var lang = this.locales[this.language];
+        if (lang && lang[msgId]) {
+          return lang[msgId].message;
+        }
+        return null;
       }
-    },
 
-    /**
-     * Returns a message in the current locale (set by `window.I18nMsg.lang`).
-     * @method getMsg
-     * @param {string=} opt_msgId Optional message id to lookup. If left off,
-     * the instance's `msgid` property is used.
-     * @return {string|null} Translated message or `null` if not found.
-     */
-    getMsg: function(opt_msgId) {
-      var msgId = opt_msgId || this.msgid;
-      var lang = this.locales[this.language];
-      if (lang && lang[msgId]) {
-        return lang[msgId].message;
-      }
-      return null;
-    }
+    });
 
-  });
-
-})();
+  })();
 </script>
-</polymer-element>
