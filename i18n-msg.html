@@ -120,6 +120,10 @@ If an appropriate message file can't be found, the `textContent` of the element 
       value: I18nMsg.locales // static
     },
 
+    created: function() {
+      this.messagesUrl = I18nMsg.url;
+    },
+
     ready: function() {
       this._setLanguage(I18nMsg.lang);
       this.messagesUrl = I18nMsg.url;
