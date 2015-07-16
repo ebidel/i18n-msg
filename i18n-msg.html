@@ -126,7 +126,6 @@ If an appropriate message file can't be found, the `textContent` of the element 
 
     ready: function() {
       this._setLanguage(I18nMsg.lang);
-      this.messagesUrl = I18nMsg.url;
 
       // Have instances observe window.I18nMsg.lang changes
       // and go fetch the localized messages.json file.
