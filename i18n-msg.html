@@ -46,6 +46,18 @@ If an appropriate message file can't be found, the `textContent` of the element 
       </body>
     </html>
 
+### Using Tokens
+
+Tokens can be used to pass dynamic content to a translated string.  For example, "Hello [name], how are you doing?" is a string that can be translated, but where the name should be left alone.  In this case, you would set the msgid to "Hello !name, how are you doing", and pass a variable {!name: Maria} as the tokens attribute.  The  json would look something like:
+
+  "Hello !name, how are you doing?": {
+    "description": "...",
+    "message": "Hola, !name. ¿Que tal?"
+  }
+
+You can use as many tokens as you like in a message
+
+
 ### Getting a message:
 
     // No argument returns the instance's message:
@@ -89,7 +101,8 @@ If an appropriate message file can't be found, the `textContent` of the element 
        */
       msgid: {
         type: String,
-        value: null
+        value: null,
+        observer: 'updateInnerHtml'
       },
 
       /**
@@ -100,6 +113,16 @@ If an appropriate message file can't be found, the `textContent` of the element 
         value: null,
         observer: '_languageChanged',
         readOnly: true
+      },
+
+      /**
+       * Tokens to be injected into the translation
+       * Tokens should be passed as a json object of {token: replacementText}
+       */
+      tokens: {
+        type: Object,
+        value: {},
+        observer: 'updateInnerHtml'
       },
 
       /**
@@ -150,10 +173,19 @@ If an appropriate message file can't be found, the `textContent` of the element 
       _instances.push(this);
     },
 
+    updateInnerHtml: function() {
+      var msg = this.getMsg(this.msgid);
+      if (msg && msg !== null) {
+        this.innerHTML = this._replaceTokens( msg);
+      }
+    },
+
     attached: function() {
       var msg = this.getMsg(this.msgid)
       if (msg && msg.message) {
-        this.innerHTML = msg.message;
+        // this.innerHTML = msg.message;
+        this.innerHTML = this._replaceTokens( msg.message);
+
       }
     },
 
@@ -168,9 +200,19 @@ If an appropriate message file can't be found, the `textContent` of the element 
       var msgId = opt_msgId || this.msgid;
       var lang = this.locales[this.language];
       if (lang && lang[msgId]) {
-        return lang[msgId].message;
+        return this._replaceTokens(lang[msgId].message);
       }
       return null;
+    },
+
+    // inject tokens into translated text
+    _replaceTokens: function(translatedMessage) {
+
+      for(var token in this.tokens) {
+        var replacementText = this.tokens[token];
+        translatedMessage = translatedMessage.replace(token, replacementText);
+      }
+      return translatedMessage;
     },
 
     _languageChanged: function() {
@@ -234,7 +276,8 @@ If an appropriate message file can't be found, the `textContent` of the element 
 
       var msg = instance.locales[instance.language][instance.msgid];
       if (msg && msg.message) {
-        instance.innerHTML = msg.message;
+
+        instance.innerHTML = instance._replaceTokens( msg.message);
       }
     },
 
