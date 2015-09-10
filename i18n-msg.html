@@ -152,8 +152,8 @@ If an appropriate message file can't be found, the `textContent` of the element 
 
     attached: function() {
       var msg = this.getMsg(this.msgid)
-      if (msg && msg.message) {
-        this.innerHTML = msg.message;
+      if (msg) {
+        this.innerHTML = msg;
       }
     },
 
