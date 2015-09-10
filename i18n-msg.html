@@ -11,6 +11,7 @@ To set the language across your site, define `I18nMsg.lang` in your main page:
 
     document.addEventListener('HTMLImportsLoaded', function() {
       I18nMsg.lang = 'es';
+      // I18nMsg.url = 'locales'; // optionally use custom folder for locales.
     });
 
 <b>Note:</b> this is done in `HTMLImportsLoaded` so `I18nMsg` will be defined by
@@ -25,8 +26,17 @@ file on your server. For example, `I18nMsg.lang = 'es'` will use `locales/es.jso
 
 The directory name can be configured by using the `messagesUrl` property, but the file
 cannot. `<i18n-msg>` will always attempt to use messages from `<messagesUrl>/<LANG_YOU_SET>.json`.
+You can also set and/or change this location globally, at any time, by setting `I18nMsg.url`.
 
-<b>Note:</b> - message files are read once and reused for all instances of `<i18n-msg>`.
+**Example** - using a custom locales folder, setting it globally for all `<i18n-msg>` instances:
+
+    I18nMsg.url = 'locales';
+
+**Example** - set locales folder path on individual element:
+
+    <i18n-msg message-url="path/to/locales">fallback text</i18n-msg>
+
+<b>Note:</b> message files are read once and reused for all instances of `<i18n-msg>`.
 
 ### Fallback text
 
@@ -54,12 +64,9 @@ If an appropriate message file can't be found, the `textContent` of the element 
     // Get a message by an id:
     document.querySelector('i18n-msg').getMsg('days');
 
-@element i18n-msg
 @demo
-@homepage https://ebidel.github.io/i18n-msg
 -->
-<dom-module id="i18n-msg">
-</dom-module>
+<dom-module id="i18n-msg"></dom-module>
 <script>
 (function () {
 
@@ -104,7 +111,7 @@ If an appropriate message file can't be found, the `textContent` of the element 
 
       /**
        * The folder name where the localized `<lang>.json` files are located.
-       * Overrides `window.I18nMsg` if not `null`.
+       * Overrides `window.I18nMsg.url` if not `null`.
        */
       messagesUrl: {
         type: String,
@@ -132,7 +139,7 @@ If an appropriate message file can't be found, the `textContent` of the element 
         this._setLanguage(newValue);
       }.bind(this));
 
-      // Have instances observe window.I18nMsg.lang changes
+      // Have instances observe window.I18nMsg.url changes
       // and go fetch the localized messages.json file.
       var observerUrl = new PathObserver(window.I18nMsg, 'url');
       observerUrl.open(function(newValue, oldValue) {

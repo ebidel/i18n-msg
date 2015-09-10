@@ -4,10 +4,8 @@
 <head>
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
   <title>i18n-msg element Demo</title>
-
   <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
   <link rel="import" href="../i18n-msg.html">
-
 </head>
 <body>
 
@@ -26,6 +24,8 @@
 
 <p>Example of updating an attribute: <input id="input" placeholder="Days"></p>
 
+<p>Example of dynamically created element: <span id="dynamic"></span></p>
+
 <script>
   var selector = document.querySelector('#selector');
   var input = document.querySelector('#input');
@@ -43,6 +43,10 @@
   document.addEventListener('i18n-language-ready', function(e) {
     var daysMsgEl = document.querySelector('#daysMsgEl');
     input.placeholder = daysMsgEl.getMsg(daysMsgEl.msgid);
+
+    var el = document.createElement('i18n-msg');
+    el.msgid = 'minutes';
+    document.querySelector('#dynamic').appendChild(el);
   });
 </script>
 <script>
