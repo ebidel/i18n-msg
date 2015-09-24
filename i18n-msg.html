@@ -96,7 +96,8 @@ If an appropriate message file can't be found, the `textContent` of the element 
        */
       msgid: {
         type: String,
-        value: null
+        value: null,
+        observer: '_messageChanged'
       },
 
       /**
@@ -178,6 +179,12 @@ If an appropriate message file can't be found, the `textContent` of the element 
         return lang[msgId].message;
       }
       return null;
+    },
+
+    _messageChanged: function() {
+      if (this.language && this.locales[this.language] && !_fetching && this.msgid) {
+        this._updateElementMessage();
+      }
     },
 
     _languageChanged: function() {
