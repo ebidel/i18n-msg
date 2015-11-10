@@ -159,10 +159,7 @@ If an appropriate message file can't be found, the `textContent` of the element 
     },
 
     attached: function() {
-      var msg = this.getMsg(this.msgid)
-      if (msg) {
-        this.innerHTML = msg;
-      }
+      this._updateElementMessage(this);
     },
 
     /**
@@ -246,9 +243,9 @@ If an appropriate message file can't be found, the `textContent` of the element 
     _updateElementMessage: function(opt_instance) {
       var instance = opt_instance || this;
 
-      var msg = instance.locales[instance.language][instance.msgid];
-      if (msg && msg.message) {
-        instance.innerHTML = msg.message;
+      var msg = this.getMsg.bind(instance)(instance.msgid);
+      if (msg) {
+        instance.innerHTML = msg;
       }
     },
 
