@@ -38,6 +38,7 @@
   selector.addEventListener('change', function() {
     document.documentElement.lang = this.value;
     I18nMsg.lang = this.value;
+    Platform.performMicrotaskCheckpoint();
   });
 
   document.addEventListener('i18n-language-ready', function(e) {
