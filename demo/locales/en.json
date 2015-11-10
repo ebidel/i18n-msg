@@ -15,5 +15,13 @@
   "minutes": {
     "description": "...",
     "message": "minutes"
+  },
+  "seconds": {
+    "message": "$seconds$ seconds",
+    "placeholders": {
+      "seconds": {
+        "content": "$1"
+      }
+    }
   }
 }

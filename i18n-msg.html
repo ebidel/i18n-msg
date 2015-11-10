@@ -117,6 +117,14 @@ If an appropriate message file can't be found, the `textContent` of the element 
       messagesUrl: {
         type: String,
         value: 'locales'
+      },
+
+      /**
+       * Placeholder values
+       */
+      placeholders: {
+        type: Array,
+        value: []
       }
     },
 
@@ -194,12 +202,17 @@ If an appropriate message file can't be found, the `textContent` of the element 
      */
     replacePlaceholdersFromMsg(msgData) {
       var msg = msgData.message || '';
+      var phValues = this.placeholders;
+      var phContent;
 
       for (var placeholder in msgData.placeholders) {
-        msg = msg.replace(
-          '$' + placeholder + '$',
-          msgData.placeholders[placeholder].content
-        );
+        phContent = msgData.placeholders[placeholder].content;
+
+        if (phContent[0] === '$') {
+          phContent = phValues[phContent.substring(1) - 1];
+        }
+
+        msg = msg.replace('$' + placeholder + '$', phContent);
       }
 
       return msg;
