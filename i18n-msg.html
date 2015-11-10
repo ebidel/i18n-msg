@@ -172,10 +172,37 @@ If an appropriate message file can't be found, the `textContent` of the element 
     getMsg: function(opt_msgId) {
       var msgId = opt_msgId || this.msgid;
       var lang = this.locales[this.language];
+
       if (lang && lang[msgId]) {
-        return lang[msgId].message;
+        var msgData = lang[msgId];
+        if (msgData.placeholders) {
+          return this.replacePlaceholdersFromMsg(msgData);
+        } else {
+          return msgData.message;
+        }
       }
       return null;
+    },
+
+    /**
+     * Returns the given message with the placeholders replaced
+     * @method replacePlaceholdersFromMsg
+     * @param {object=} msgData - Message data including placeholders following
+     *        chrome's i18n-messages format:
+     *        https://developer.chrome.com/extensions/i18n-messages
+     * @return {string} Translated message
+     */
+    replacePlaceholdersFromMsg(msgData) {
+      var msg = msgData.message || '';
+
+      for (var placeholder in msgData.placeholders) {
+        msg = msg.replace(
+          '$' + placeholder + '$',
+          msgData.placeholders[placeholder].content
+        );
+      }
+
+      return msg;
     },
 
     _msgidChanged: function() {

@@ -5,7 +5,12 @@
   },
   "hours": {
     "description": "...",
-    "message": "hours"
+    "message": "$hours$ hours",
+    "placeholders": {
+      "hours": {
+        "content": "3"
+      }
+    }
   },
   "minutes": {
     "description": "...",
