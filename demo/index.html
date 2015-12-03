@@ -22,7 +22,12 @@
   <option>pt-br</option>
 </select>
 
-<p>Example of updating an attribute: <input id="input" placeholder="Days"></p>
+<p>Example of updating an attribute with getMsg() method: <input id="input" placeholder="Days"></p>
+
+<template is="dom-bind">
+  <i18n-msg msgid="days" msg="{{days}}"></i18n-msg>
+  <p>Example of updating an attribute: <input id="input" placeholder="[[days]]"></p>
+</template>
 
 <p>Example of dynamically created element: <span id="dynamic"></span></p>
 

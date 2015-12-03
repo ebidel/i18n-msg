@@ -122,6 +122,15 @@ If an appropriate message file can't be found, the `textContent` of the element 
       messagesUrl: {
         type: String,
         value: 'locales'
+      },
+
+      /**
+       * The message in the current locale
+       */
+      msg: {
+        type: String,
+        value: null,
+        notify: true
       }
     },
 
@@ -166,6 +175,7 @@ If an appropriate message file can't be found, the `textContent` of the element 
     attached: function() {
       var msg = this.getMsg(this.msgid)
       if (msg) {
+        this.msg = msg;
         this.innerHTML = msg;
       }
     },
@@ -253,6 +263,7 @@ If an appropriate message file can't be found, the `textContent` of the element 
 
       var msg = instance.locales[instance.language][instance.msgid];
       if (msg && msg.message) {
+        instance.msg = msg.message;
         instance.innerHTML = msg.message;
       }
     },
