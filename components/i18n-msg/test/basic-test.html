@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <title>i18n-msg</title>
+
+  <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+
+  <!-- Step 1: import the element to test -->
+  <link rel="import" href="../i18n-msg.html">
+</head>
+<body>
+
+  <i18n-msg msgid="days" id="days">PLACEHOLDER_STRING</i18n-msg>
+  <i18n-msg msgid="UNKNOWN_MSG_ID" id="days2">PLACEHOLDER_STRING</i18n-msg>
+
+  <script>
+
+    I18nMsg.lang = 'es';
+    I18nMsg.url = '../demo/locales';
+
+    suite('<i18n-element>', function() {
+
+      var el = document.querySelector('#days');
+      var expected = 'días';
+
+      test('defines the "msgid" property', function() {
+        assert.equal(el.msgid, 'days');
+      });
+
+      test('getMsg() correctly returns', function() {
+        assert.equal(el.getMsg(el.msgid), expected);
+        assert.equal(el.getMsg('hours'), 'horas');
+        assert.equal(el.getMsg(), expected); // no args returns instance's message
+      });
+
+      test('.language property matches I18nMsg.lang', function() {
+        assert.equal(el.language, I18nMsg.lang);
+      });
+
+      test('.language property is readOnly', function() {
+        var val = 'bogus';
+        el.language = val;
+        assert.notEqual(el.language, val);
+      });
+
+      test('.textContent was updated to localize message', function() {
+        assert.equal(el.textContent, expected);
+      });
+
+      test('.locales property was populated', function() {
+        assert.isTrue(I18nMsg.lang in el.locales);
+      });
+
+      test('attribute replaced', function() {
+        var input = document.createElement('input');
+        input.placeholder = el.getMsg(el.msgid);
+        assert.equal(input.placeholder, expected);
+      });
+
+    });
+
+    suite('<i18n-element> other', function() {
+
+      var el = document.querySelector('#days2');
+
+      test('an unknown message id is not replaced', function() {
+        assert.equal(el.textContent, 'PLACEHOLDER_STRING');
+      });
+
+      test('dyanmically created i18n-msg', function() {
+        var el2 = document.createElement('i18n-msg');
+        el2.msgid = 'minutes';
+        assert.equal(el2.textContent, 'minutos');
+      });
+
+    });
+  </script>
+
+</body>
+</html>

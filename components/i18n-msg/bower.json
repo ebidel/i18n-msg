@@ -1,0 +1,32 @@
+{
+  "name": "i18n-msg",
+  "version": "1.0.3",
+  "authors": [
+    "Eric Bidelman <ebidel@>"
+  ],
+  "description": "Custom element to do localization (i18n) message string replacement.",
+  "keywords": [
+    "web-component",
+    "web-components",
+    "polymer",
+    "i18n",
+    "i10n",
+    "localization",
+    "internationalization"
+  ],
+  "main": "i18n-msg.html",
+  "license": "MIT",
+  "homepage": "https://github.com/ebidel/i18n-msg/",
+  "ignore": [
+    "/.*",
+    "/tests/"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.2.3",
+    "observe-js": "Polymer/observe-js"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "web-component-tester": "Polymer/web-component-tester#master"
+  }
+}

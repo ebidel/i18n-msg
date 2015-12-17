@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <title>i18n-msg</title>
+
+  <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+
+  <!-- Step 1: import the element to test -->
+  <link rel="import" href="../i18n-msg.html">
+</head>
+<body>
+
+  <i18n-msg msgid="days" id="days">PLACEHOLDER_STRING</i18n-msg>
+  <!-- <i18n-msg msgid="days" id="days"
+            messages-url="path/to/locales">PLACEHOLDER_STRING</i18n-msg> -->
+
+  <script>
+
+    // I18nMsg.lang = 'fr';
+    I18nMsg.url = '../demo/locales';
+
+    suite('<i18n-element> advanced', function() {
+
+      var el = document.querySelector('#days');
+
+      // test('messagesUrl is overridden by I18nMsg.url', function() {
+      //   assert.equal(el.messagesUrl, 'path/to/locales');
+      // });
+
+      // test('i18n-language-ready fires', function(done) {
+      //   el.addEventListener('i18n-language-ready', function(e) {
+      //     assert.isTrue(true);
+      //     done();
+      //   });
+      // });
+
+      test('Updating I18nMsg.lang', function(done) {
+        // document.documentElement.lang = 'fr';
+        I18nMsg.lang = 'fr';
+        setTimeout(function() {
+          assert.equal(el.textContent, 'journées');
+          done();
+        }, 10);
+
+      });
+
+    });
+  </script>
+
+</body>
+</html>
