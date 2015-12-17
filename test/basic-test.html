@@ -40,6 +40,12 @@
         assert.equal(el.language, I18nMsg.lang);
       });
 
+      test('.language property is readOnly', function() {
+        var val = 'bogus';
+        el.language = val;
+        assert.notEqual(el.language, val);
+      });
+
       test('.textContent was updated to localize message', function() {
         assert.equal(el.textContent, expected);
       });

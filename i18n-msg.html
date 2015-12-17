@@ -12,11 +12,16 @@ To set the language across your site, define `I18nMsg.lang` in your main page:
     document.addEventListener('HTMLImportsLoaded', function() {
       I18nMsg.lang = 'es';
       // I18nMsg.url = 'locales'; // optionally use custom folder for locales.
+      Platform.performMicrotaskCheckpoint();
     });
 
 <b>Note:</b> this is done in `HTMLImportsLoaded` so `I18nMsg` will be defined by
 the time you set `I18nMsg.lang`. This timing is necessary under the polyfill and is
 <b>not needed if the browser supports HTML Imports</b>, natively.
+
+<b>Note:</b> you must call `Platform.performMicrotaskCheckpoint()` whenever
+making a change to the `I18nMsg` object. This is required due to the removal
+of `Object.observe()`.
 
 ### Message files
 
@@ -254,7 +259,7 @@ If an appropriate message file can't be found, the `textContent` of the element 
 
     _notifyInstances: function() {
       for (var i = 0, instance; instance = _instances[i]; ++i) {
-        instance.language = I18nMsg.lang;
+        instance._setLanguage(I18nMsg.lang);
 
         if (!instance.locales[instance.language][instance.msgid]) {
           console.warn(this.localName + ': "' + instance.msgid + '" message id was not found');
