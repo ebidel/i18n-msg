@@ -226,7 +226,7 @@ If an appropriate message file can't be found, the `textContent` of the element 
       xhr.onload = function(e) {
         _fetching = false;
 
-        if (e.target.status !== 200) {
+        if (e.target.status !== 200 && e.target.status !== 0) {
           return;
         }
 
