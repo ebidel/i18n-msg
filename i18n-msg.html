@@ -122,6 +122,14 @@ If an appropriate message file can't be found, the `textContent` of the element 
       messagesUrl: {
         type: String,
         value: 'locales'
+      },
+
+      /**
+       * Placeholder values
+       */
+      placeholders: {
+        type: Array,
+        value: []
       }
     },
 
@@ -164,10 +172,7 @@ If an appropriate message file can't be found, the `textContent` of the element 
     },
 
     attached: function() {
-      var msg = this.getMsg(this.msgid)
-      if (msg) {
-        this.innerHTML = msg;
-      }
+      this._updateElementMessage(this);
     },
 
     /**
@@ -180,10 +185,42 @@ If an appropriate message file can't be found, the `textContent` of the element 
     getMsg: function(opt_msgId) {
       var msgId = opt_msgId || this.msgid;
       var lang = this.locales[this.language];
+
       if (lang && lang[msgId]) {
-        return lang[msgId].message;
+        var msgData = lang[msgId];
+        if (msgData.placeholders) {
+          return this.replacePlaceholdersFromMsg(msgData);
+        } else {
+          return msgData.message;
+        }
       }
       return null;
+    },
+
+    /**
+     * Returns the given message with the placeholders replaced
+     * @method replacePlaceholdersFromMsg
+     * @param {object=} msgData - Message data including placeholders following
+     *        chrome's i18n-messages format:
+     *        https://developer.chrome.com/extensions/i18n-messages
+     * @return {string} Translated message
+     */
+    replacePlaceholdersFromMsg(msgData) {
+      var msg = msgData.message || '';
+      var phValues = this.placeholders;
+      var phContent;
+
+      for (var placeholder in msgData.placeholders) {
+        phContent = msgData.placeholders[placeholder].content;
+
+        if (phContent[0] === '$') {
+          phContent = phValues[phContent.substring(1) - 1];
+        }
+
+        msg = msg.replace('$' + placeholder + '$', phContent);
+      }
+
+      return msg;
     },
 
     _msgidChanged: function() {
@@ -251,9 +288,9 @@ If an appropriate message file can't be found, the `textContent` of the element 
     _updateElementMessage: function(opt_instance) {
       var instance = opt_instance || this;
 
-      var msg = instance.locales[instance.language][instance.msgid];
-      if (msg && msg.message) {
-        instance.innerHTML = msg.message;
+      var msg = this.getMsg.bind(instance)(instance.msgid);
+      if (msg) {
+        instance.innerHTML = msg;
       }
     },
 
