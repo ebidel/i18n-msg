@@ -36,6 +36,10 @@
         assert.equal(el.getMsg(), expected); // no args returns instance's message
       });
 
+      test('msg property is correctly setted', function() {
+        assert.equal(el.msg, expected);
+      });
+
       test('.language property matches I18nMsg.lang', function() {
         assert.equal(el.language, I18nMsg.lang);
       });
