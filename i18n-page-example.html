@@ -1,0 +1,57 @@
+<link rel="import" href="i18n-msg-behavior.html">
+
+<!--
+`<i18n-page-example>` Example of i18n-msg-behavior usage in a component page.
+@demo demo/page.html
+-->
+
+<dom-module id="i18n-page-example">
+  <template>
+    <h1>[[i18n.days]]</h1>
+    <span>[[i18n.hours]]</span>
+  </template>
+</dom-module>
+
+<script>
+(function () {
+
+  window.I18nMsg = window.I18nMsg || {
+    lang: null,
+    url: 'locales',
+    locales: {}
+  };
+  
+  Polymer({
+    is: 'i18n-page-example',
+
+    behaviors: [i18nMsgBehavior],
+
+    properties: {
+      /**
+       * i18n object, contains all translations.
+       * `_updateMessages()` updates the translations.
+       */
+      i18n: {
+        type: Object,
+        value: {
+          days: '',
+          hours: '',
+        },
+      },
+    },
+
+    _updateMessages: function() {
+      if (this.locales && this.locales[this.language]) {
+        Object.keys(this.i18n).forEach(function(msgid) {
+          this.set('i18n.' + msgid, this._parentGetMsg(msgid));
+        }.bind(this));
+      }
+    },
+
+    ready: function() {
+      this._parentReady(window.I18nMsg);
+    }
+
+  });
+})();
+</script>
