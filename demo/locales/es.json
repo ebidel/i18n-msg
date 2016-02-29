@@ -10,5 +10,23 @@
   "minutes": {
     "description": "...",
     "message": "minutos"
+  },
+  "current": {
+    "description": "Example using placeholder values passed through attributes.",
+    "message": "Hoy es $day$/$month$/$year$",
+    "placeholders": {
+      "day": {
+        "content": "$1",
+        "example": "29"
+      },
+      "month": {
+        "content": "$2",
+        "example": "2"
+      },
+      "year": {
+        "content": "$3",
+        "example": "2016"
+      }
+    }
   }
 }

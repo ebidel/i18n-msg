@@ -49,21 +49,21 @@ If an appropriate message file can't be found, the `textContent` of the element 
 
     <i18n-msg msgid="unknownmsgid">fallback text</i18n-msg>
 
-### Parameters
+### Placeholders
 
 It's possible to insert text within the message which requires no translation (e.g: names, dates, numbers).
-To make available the use of parameters the message must contains $n (being n a numeric value) whenever a parameter
-should be used, and to use these add the attribute "parameters" and separate each parameter with ";;". Example:
+To make available the use of placeholders the message must contains $n (being n a numeric value) whenever a parameter
+should be used, and to use these add the attribute "placeholders" and separate each parameter with ";;". Example:
 JSON
-    "textwithparameters" {
+    "textwithplaceholders" {
       "description" : "...",
       "message" : "I am $0 and I live in $1"
     }
 
 HTML
-    <i18-msg msgid="textwithparameters" paremeters="John Doe;;Seattle"></i18n-msg>
+    <i18-msg msgid="textwithplaceholders" paremeters="John Doe;;Seattle"></i18n-msg>
 
-It's also possible to use {{}} and [[]] within the parameters.
+It's also possible to use {{}} and [[]] within the placeholders.
 
 ### Full example
 
@@ -122,13 +122,15 @@ It's also possible to use {{}} and [[]] within the parameters.
       },
 
       /**
-       * Parameters used to insert within the message if it contains replacement
-       * patterns to switch with.
+       * Placeholders used to insert within the message if it contains replacement
+       * patterns to switch with. To use this feature you must include the "placeholders"
+       * attribute and use '' for the array and "" for each element.
+       * Example: placeholders = '["John Doe","Seattle"]'
        */
-      parameters: {
+      placeholders: {
         type: Array,
         value: [],
-        observer: '_parametersChanged'
+        observer: '_placeholdersChanged'
       },
 
       /**
@@ -218,8 +220,8 @@ It's also possible to use {{}} and [[]] within the parameters.
       }
     },
 
-    _parametersChanged: function() {
-      if (this.language && this.locales[this.language] && this.parameters) {
+    _placeholdersChanged: function() {
+      if (this.language && this.locales[this.language] && this.placeholders) {
         this._updateElementMessage(this);
       }
     },
