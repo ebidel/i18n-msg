@@ -126,8 +126,8 @@ It's also possible to use {{}} and [[]] within the parameters.
        * patterns to switch with.
        */
       parameters: {
-        type: String,
-        value: null,
+        type: Array,
+        value: [],
         observer: '_parametersChanged'
       },
 
@@ -285,15 +285,23 @@ It's also possible to use {{}} and [[]] within the parameters.
 
       var msg = instance.locales[instance.language][instance.msgid];
       if (msg && msg.message) {
-        var message = msg.message,
-            paramCount = (message.match(/\$[0-9]+/g) || []).length,
-            parameters = instance.getAttribute('parameters');
-        if ((paramCount > 0) && (parameters)) {
-          parameters.split(';;').forEach(function(e,i) {
-            message = message.split('$'+i).join(e);
-          });
+        var message = msg.message;
+        var placeholders = msg.placeholders;
+        var phData = instance.placeholders;
+        if ((placeholders) && (phData)) {
+          var content, pos;
+          for (var p in placeholders) {
+            content = placeholders[p].content;
+            if (content[0] == '$') {
+              pos = content.substring(1, content.length);
+              if (!isNaN(pos)) {
+                content = (phData.length < pos) ? '' : phData[pos - 1];
+              }
+            }
+            message = message.split('$' + p + '$').join(content);
+          }
         }
-        instance.innerHTML = msg.message;
+        instance.innerHTML = message;
       }
     },
 
