@@ -1,0 +1,39 @@
+<link rel="import" href="../../polymer/polymer.html">
+<link rel="import" href="../i18n-msg.html">
+<dom-module id="current-date">
+  <style>
+    :host {
+
+    }
+  </style>
+  <template>
+    <p>If you were to say the current date in the selected languange it would be like:
+      <b>
+        <i18n-msg msgid="current" placeholders$='["[[current.day]]","[[current.month]]","[[current.year]]"]'>PLACEHOLDER_STRING</i18n-msg>
+      </b>.
+    </p>
+  </template>
+
+  <script>
+  (function() {
+    Polymer({
+      is: 'current-date',
+
+      properties: {
+        current: {
+          type: Object,
+          value: {
+            day: new Date().getDate(),
+            month: (new Date().getMonth() + 1),
+            year: new Date().getUTCFullYear()
+          }
+        }
+      },
+
+      ready: function() {
+      }
+    });
+  })();
+  </script>
+
+</dom-module>

@@ -6,18 +6,14 @@
   <title>i18n-msg element Demo</title>
   <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
   <link rel="import" href="../i18n-msg.html">
+  <link rel="import" href="currentDate.html">
 </head>
 <body>
 
 <p>"Days" in selected language is: <b><i18n-msg id="daysMsgEl" msgid="days">PLACEHOLDER_STRING</i18n-msg></b>!</p>
 <p>"Hours" in selected language is: <b><i18n-msg msgid="hours">PLACEHOLDER_STRING</i18n-msg></b>!</p>
 <p>"Minutes" in selected language is: <b><i18n-msg msgid="minutes">PLACEHOLDER_STRING</i18n-msg></b>!</p>
-<p>If you were to say the current date in the selected languange it would be like:
-  <b>
-    <i18n-msg msgid="current" placeholders='["29","2","2016"]'>
-    </i18n-msg>
-  </b>.
-</p>
+<current-date></current-date>
 
 <p>Example fallback text when a message id isn't found: <i18n-msg msgid="UNKNOWN_MSG_ID">PLACEHOLDER_STRING</i18n-msg></b></p>
 
