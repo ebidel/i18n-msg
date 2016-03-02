@@ -15,6 +15,7 @@
 
   <i18n-msg msgid="days" id="days">PLACEHOLDER_STRING</i18n-msg>
   <i18n-msg msgid="UNKNOWN_MSG_ID" id="days2">PLACEHOLDER_STRING</i18n-msg>
+  <i18n-msg msgid="current" id="current" placeholders='["29"]'>PLACEHOLDER_STRING</i18n-msg>
 
   <script>
 
@@ -69,6 +70,7 @@
     suite('<i18n-element> other', function() {
 
       var el = document.querySelector('#days2');
+      var elp = document.getElementById('current');
 
       test('an unknown message id is not replaced', function() {
         assert.equal(el.textContent, 'PLACEHOLDER_STRING');
@@ -80,6 +82,14 @@
         assert.equal(el2.textContent, 'minutos');
       });
 
+      test('Use placeholders', function() {
+        assert.equal(elp.textContent, 'Hoy es 29//');
+      });
+
+      test('Updating placeholders property', function() {
+        elp.placeholders = ["29","2","2016"];
+        assert.equal(elp.innerHTML, 'Hoy es 29/2/2016');
+      });
     });
   </script>
 

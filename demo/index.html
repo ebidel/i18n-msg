@@ -6,12 +6,14 @@
   <title>i18n-msg element Demo</title>
   <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
   <link rel="import" href="../i18n-msg.html">
+  <link rel="import" href="currentDate.html">
 </head>
 <body>
 
 <p>"Days" in selected language is: <b><i18n-msg id="daysMsgEl" msgid="days">PLACEHOLDER_STRING</i18n-msg></b>!</p>
 <p>"Hours" in selected language is: <b><i18n-msg msgid="hours">PLACEHOLDER_STRING</i18n-msg></b>!</p>
 <p>"Minutes" in selected language is: <b><i18n-msg msgid="minutes">PLACEHOLDER_STRING</i18n-msg></b>!</p>
+<current-date></current-date>
 
 <p>Example fallback text when a message id isn't found: <i18n-msg msgid="UNKNOWN_MSG_ID">PLACEHOLDER_STRING</i18n-msg></b></p>
 
@@ -34,6 +36,12 @@
 <script>
   var selector = document.querySelector('#selector');
   var input = document.querySelector('#input');
+  /*
+  var current = new Date();
+  var currentDay = current.getDate();
+  var currentMonth = current.getMonth();
+  var currentYear = current.getUTCFullYear();
+  */
 
   // Event is only needed when running under the HTMLImports polyfill.
   document.addEventListener('HTMLImportsLoaded', function() {
