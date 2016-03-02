@@ -150,6 +150,15 @@ It's also possible to use {{}} and [[]] within the placeholders.
       messagesUrl: {
         type: String,
         value: 'locales'
+      },
+
+      /**
+       * The message in the current locale
+       */
+      msg: {
+        type: String,
+        value: null,
+        notify: true
       }
     },
 
@@ -194,6 +203,7 @@ It's also possible to use {{}} and [[]] within the placeholders.
     attached: function() {
       var msg = this.getMsg(this.msgid)
       if (msg) {
+        this.msg = msg;
         this.innerHTML = msg;
       }
     },
@@ -303,6 +313,7 @@ It's also possible to use {{}} and [[]] within the placeholders.
             message = message.split('$' + p + '$').join(content);
           }
         }
+        instance.msg = msg.message;
         instance.innerHTML = message;
       }
     },
