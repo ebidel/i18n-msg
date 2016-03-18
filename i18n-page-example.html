@@ -15,12 +15,6 @@
 <script>
 (function () {
 
-  window.I18nMsg = window.I18nMsg || {
-    lang: null,
-    url: 'locales',
-    locales: {}
-  };
-  
   Polymer({
     is: 'i18n-page-example',
 
@@ -38,14 +32,6 @@
           hours: '',
         },
       },
-    },
-
-    _updateMessages: function() {
-      if (this.locales && this.locales[this.language]) {
-        Object.keys(this.i18n).forEach(function(msgid) {
-          this.set('i18n.' + msgid, this._parentGetMsg(msgid));
-        }.bind(this));
-      }
     },
 
     ready: function() {

@@ -4,15 +4,22 @@
 <script>
 (function () {
 
-var _instances = []; // Holds all i18n-msg elements to have them easily updated with translation messages.
-var _fetching = false; // True if there's an outstanding XHR fetching a locale file.
-var _numInstancesUpdated = 0;
-/**
- * `<i18n-msg-behavior>` See `i18n-msg` and `i18n-page-example` to get examples of how to implement
- * this behavior.
- * @polymerBehavior
- */
-i18nMsgBehavior = {
+  window.I18nMsg = window.I18nMsg || {
+    lang: null,
+    url: 'locales',
+    locales: {}
+  };
+
+  var _instances = []; // Holds all i18n-msg elements to have them easily updated with translation messages.
+  var _fetching = false; // True if there's an outstanding XHR fetching a locale file.
+  var _numInstancesUpdated = 0;
+
+  /**
+   * `<i18n-msg-behavior>` See `i18n-msg` and `i18n-page-example` to get examples of how to implement
+   * this behavior.
+   * @polymerBehavior
+   */
+  i18nMsgBehavior = {
     /**
      * The `i18n-language-ready` is fired after the locale was fetched and all `<i18n-msg>` elements were updated.
      *
@@ -156,9 +163,16 @@ i18nMsgBehavior = {
         instance.locales[this.language] = this.locales[this.language];
         instance._updateMessages();
       }
-    }
+    },
+
+    _updateMessages: function() {
+      if (this.locales && this.locales[this.language]) {
+        Object.keys(this.i18n).forEach(function(msgid) {
+          this.set('i18n.' + msgid, this._parentGetMsg(msgid));
+        }.bind(this));
+      }
+    },
 
   };
-
 })();
 </script>
