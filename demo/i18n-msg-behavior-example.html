@@ -3,7 +3,6 @@
 <!--
 `<i18n-msg-behavior-example>`
 Example of i18n-msg-behavior usage in a component page.
-@demo demo/index.html
 -->
 
 <dom-module id="i18n-msg-behavior-example">
@@ -24,17 +23,15 @@ Example of i18n-msg-behavior usage in a component page.
     properties: {
       /**
        * i18n object, contains all translations.
-       * `_updateMessages()` updates the translations.
        */
       i18n: {
         type: Object,
         value: {
           days: '',
           hours: '',
-        },
-      },
-    },
-
+        }
+      }
+    }
   });
 })();
 </script>
