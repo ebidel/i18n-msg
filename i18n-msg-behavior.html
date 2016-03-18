@@ -3,45 +3,6 @@
 
 <!--
 `<i18n-msg-behavior>` allows adding the i18n functionality via polymer behavior.
-
-See the `<i18n-msg>` documentation for side configuration and language options.
-
-### Example
-
-To use the `<i18n-msg-behavior>` add the behavior to the behaviors of the
-element and use the `i18n` property to add message ids and default values.
-
-    Polymer({
-      ...
-      behaviors: [i18nMsgBehavior],
-
-      properties: {
-        i18n: {
-          type: Object,
-          value: {
-            label: 'default label'
-          }
-        }
-      }
-      ...
-    });
-
-In the template you can then use those message ids:
-
-    <template>
-      <h1>[[i18n.label]]</h1>
-    </template>
-
-### Custom events
-
-If you override the `ready` function then you will need to add the
-`_parentReady` call to the ready function to trigger the i18n:
-
-    ready: function() {
-      this._parentReady(window.I18nMsg);
-    }
-
-@demo
 -->
 <script>
 (function () {
@@ -56,11 +17,49 @@ If you override the `ready` function then you will need to add the
   var _fetching = false; // True if there's an outstanding XHR fetching a locale file.
   var _numInstancesUpdated = 0;
 
-  /**
-   * `<i18n-msg-behavior>` See `i18n-msg` and `i18n-page-example` to get examples of how to implement
-   * this behavior.
-   * @polymerBehavior
-   */
+   /**
+    * `<i18n-msg-behavior>` allows adding the i18n functionality via polymer
+    * behavior.
+    *
+    * See the `<i18n-msg>` documentation for site configuration and language
+    * options.
+    *
+    * ### Example
+    *
+    * To use the `<i18n-msg-behavior>` add the behavior to the behaviors of the
+    * element and use the `i18n` property to add message ids and default values.
+    *
+    *     Polymer({
+    *       ...
+    *       behaviors: [i18nMsgBehavior],
+    *
+    *       properties: {
+    *         i18n: {
+    *           type: Object,
+    *           value: {
+    *             label: 'default label'
+    *               }
+    *         }
+    *       }
+    *        ...
+    *     });
+    *
+    * In the template you can then use those message ids:
+    *
+    *     <template>
+    *       <h1>[[i18n.label]]</h1>
+    *     </template>
+    *
+    * ### Custom events
+    *
+    * If you override the `ready` function then you will need to add the
+    * `_parentReady` call to the ready function to trigger the i18n:
+    *
+    *     ready: function() {
+    *       this._parentReady(window.I18nMsg);
+    *     }
+    * @polymerBehavior
+    */
   i18nMsgBehavior = {
     /**
      * The `i18n-language-ready` is fired after the locale was fetched and all `<i18n-msg>` elements were updated.
