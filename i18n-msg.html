@@ -74,12 +74,6 @@ If an appropriate message file can't be found, the `textContent` of the element 
 <script>
 (function () {
 
-  window.I18nMsg = window.I18nMsg || {
-    lang: null,
-    url: 'locales',
-    locales: {}
-  };
-  
   Polymer({
     is: 'i18n-msg',
 
@@ -140,7 +134,7 @@ If an appropriate message file can't be found, the `textContent` of the element 
         this.innerHTML = msg;
       }
     },
-    
+
     ready: function() {
       this._parentReady(window.I18nMsg);
     }
