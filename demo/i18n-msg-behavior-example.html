@@ -1,11 +1,12 @@
-<link rel="import" href="i18n-msg-behavior.html">
+<link rel="import" href="../i18n-msg-behavior.html">
 
 <!--
-`<i18n-page-example>` Example of i18n-msg-behavior usage in a component page.
-@demo demo/page.html
+`<i18n-msg-behavior-example>`
+Example of i18n-msg-behavior usage in a component page.
+@demo demo/index.html
 -->
 
-<dom-module id="i18n-page-example">
+<dom-module id="i18n-msg-behavior-example">
   <template>
     <h1>[[i18n.days]]</h1>
     <span>[[i18n.hours]]</span>
@@ -16,9 +17,9 @@
 (function () {
 
   Polymer({
-    is: 'i18n-page-example',
+    is: 'i18n-msg-behavior-example',
 
-    behaviors: [i18nMsgBehavior],
+    behaviors: [ i18nMsgBehavior ],
 
     properties: {
       /**
@@ -33,10 +34,6 @@
         },
       },
     },
-
-    ready: function() {
-      this._parentReady(window.I18nMsg);
-    }
 
   });
 })();
