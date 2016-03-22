@@ -53,10 +53,10 @@
      * ### Custom events
      *
      * If you override the `ready` function then you will need to add the
-     * `_parentReady` call to the ready function to trigger the i18n:
+     * `init` call to the ready function to trigger the i18n:
      *
      *     ready: function() {
-     *       this._parentReady(window.I18nMsg);
+     *       this.init(window.I18nMsg);
      *     }
      * @polymerBehavior
      * @demo
@@ -99,7 +99,7 @@
 
       },
 
-      _parentReady: function(I18nMsg) {
+      init: function(I18nMsg) {
         this.I18nMsg = I18nMsg;
         this.messagesUrl = this.I18nMsg.url;
         this._setLanguage(this.I18nMsg.lang);
@@ -208,7 +208,7 @@
       },
 
       ready: function() {
-        this._parentReady(window.I18nMsg);
+        this.init(window.I18nMsg);
       },
 
       _updateMessages: function() {
