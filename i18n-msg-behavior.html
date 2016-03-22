@@ -27,7 +27,11 @@
      * ### Example
      *
      * To use the `<i18n-msg-behavior>` add the behavior to the behaviors of the
-     * element and use the `i18n` property to add message ids and default values.
+     * element. Use the `i18n` property to get the message, by default all keys
+     * of the first locale file are filled in the property.
+     *
+     * If you want only few properties, you can override i18n property like in
+     * the following example.
      *
      *     Polymer({
      *       ...
@@ -38,7 +42,7 @@
      *           type: Object,
      *           value: {
      *             label: 'default label'
-     *               }
+     *           }
      *         }
      *       }
      *        ...
@@ -97,6 +101,13 @@
           value: {}
         },
 
+        /**
+         * i18n object, by default it contains all translations.
+         */
+        i18n: {
+          type: Object,
+          value: {}
+        }
       },
 
       init: function(I18nMsg) {
@@ -213,11 +224,27 @@
 
       _updateMessages: function() {
         if (this.locales && this.locales[this.language]) {
+          // If i18n is empty fill it with the keys from the first locale
+          if (Object.keys(this.i18n).length === 0) {
+            var localesArray = Object.keys(this.locales);
+            if (localesArray.length > 0) {
+              var locale = localesArray[0];
+              var i18nObject = this.locales[locale];
+              Object.keys(i18nObject).forEach(function(i18nKey) {
+                this.i18n[i18nKey] = '';
+              }.bind(this));
+            }
+          }
           Object.keys(this.i18n).forEach(function(msgid) {
-            this.set('i18n.' + msgid, this._parentGetMsg(msgid));
+            var msg = this._parentGetMsg(msgid);
+            if (msg) {
+              this.set('i18n.' + msgid, msg);
+            } else {
+              console.warn(this.language + ': "' + msgid + '" message id was not found in ' + this.I18nMsg.url);
+            }
           }.bind(this));
         }
-      },
+      }
 
     };
   })();
