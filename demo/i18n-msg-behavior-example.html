@@ -3,6 +3,7 @@
 <!--
 `<i18n-msg-behavior-example>`
 Example of i18n-msg-behavior usage in a component page.
+With i18n override
 -->
 
 <dom-module id="i18n-msg-behavior-example">
@@ -17,6 +18,37 @@ Example of i18n-msg-behavior usage in a component page.
 
   Polymer({
     is: 'i18n-msg-behavior-example',
+
+    behaviors: [ i18nMsgBehavior ],
+
+    properties: {
+      i18n: {
+        value: {
+          days: ''
+        }
+      }
+    }
+  });
+})();
+</script>
+
+<!--
+`<i18n-msg-behavior-example-wp>`
+Example of i18n-msg-behavior usage in a component page.
+-->
+
+<dom-module id="i18n-msg-behavior-example-wp">
+  <template>
+    <h1>[[i18n.days]]</h1>
+    <span>[[i18n.hours]]</span>
+  </template>
+</dom-module>
+
+<script>
+(function () {
+
+  Polymer({
+    is: 'i18n-msg-behavior-example-wp',
 
     behaviors: [ i18nMsgBehavior ]
   });

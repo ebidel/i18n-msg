@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <title>i18n-msg</title>
+
+  <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <script src="../../test-fixture/test-fixture-mocha.js"></script>
+
+  <!-- Step 1: import the element to test -->
+  <link rel="import" href="../i18n-msg.html">
+  <link rel="import" href="../i18n-msg-behavior.html">
+  <link rel="import" href="../../test-fixture/test-fixture.html">
+  <link rel="import" href="../demo/i18n-msg-behavior-example.html">
+</head>
+<body>
+
+  <test-fixture id="i18n-msg-behavior-element-wp">
+    <template>
+      <i18n-msg-behavior-example-wp></i18n-msg-behavior-example-wp>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="i18n-msg-behavior-element">
+    <template>
+      <i18n-msg-behavior-example></i18n-msg-behavior-example>
+    </template>
+  </test-fixture>
+
+  <script>
+
+    var i18nMsgBehaviorElementWp;
+    var i18nMsgBehaviorElement;
+
+    setup(function() {
+      i18nMsgBehaviorElement = fixture('i18n-msg-behavior-element');
+      i18nMsgBehaviorElementWp = fixture('i18n-msg-behavior-element-wp');
+    });
+
+    I18nMsg.lang = 'es';
+    I18nMsg.url = '../demo/locales';
+
+    suite('<i18n-msg-behavior-element-wp>', function() {
+      test('Day property is setted', function(done) {
+        flush(function() {
+          var h1 = i18nMsgBehaviorElementWp.querySelector('h1').textContent;
+          assert.equal(h1, 'días');
+          done();
+        });
+      });
+      test('Hours property is setted', function(done) {
+        flush(function() {
+          var span = i18nMsgBehaviorElementWp.querySelector('span').textContent;
+          assert.equal(span, 'horas');
+          done();
+        });
+      });
+    });
+
+    suite('<i18n-msg-behavior>', function() {
+      test('Day property is setted', function(done) {
+        flush(function() {
+          var h1 = i18nMsgBehaviorElement.querySelector('h1').textContent;
+          assert.equal(h1, 'días');
+          done();
+        });
+      });
+      test('Hours property is not setted', function(done) {
+        flush(function() {
+          var span = i18nMsgBehaviorElement.querySelector('span').textContent;
+          assert.equal(span, '');
+          done();
+        });
+      });
+    });
+  </script>
+</body>
+</html>
