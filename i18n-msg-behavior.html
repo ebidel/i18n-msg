@@ -222,27 +222,29 @@
         this.init(window.I18nMsg);
       },
 
-      _updateMessages: function() {
+      _setMsgs: function(msgid) {
+        var msg = this._parentGetMsg(msgid);
+        if (msg) {
+          this.set('i18n.' + msgid, msg);
+        } else {
+          console.warn(this.language + ': "' + msgid + '" message id was not found in ' + this.I18nMsg.url);
+        }
+     },
+
+     _updateMessages: function() {
         if (this.locales && this.locales[this.language]) {
           // If i18n is empty fill it with the keys from the first locale
           if (Object.keys(this.i18n).length === 0) {
             var localesArray = Object.keys(this.locales);
             if (localesArray.length > 0) {
-              var locale = localesArray[0];
-              var i18nObject = this.locales[locale];
-              Object.keys(i18nObject).forEach(function(i18nKey) {
+              Object.keys(this.locales[localesArray[0]]).forEach(function(i18nKey) {
                 this.i18n[i18nKey] = '';
+                this._setMsgs(i18nKey);
               }.bind(this));
             }
+          } else {
+            Object.keys(this.i18n).forEach(this._setMsgs.bind(this));
           }
-          Object.keys(this.i18n).forEach(function(msgid) {
-            var msg = this._parentGetMsg(msgid);
-            if (msg) {
-              this.set('i18n.' + msgid, msg);
-            } else {
-              console.warn(this.language + ': "' + msgid + '" message id was not found in ' + this.I18nMsg.url);
-            }
-          }.bind(this));
         }
       }
 
