@@ -5,16 +5,28 @@
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
   <title>i18n-msg</title>
 
-  <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
+  <script src="../../webcomponentsjs/webcomponents.js"></script>
   <script src="../../web-component-tester/browser.js"></script>
+  <script src="../../test-fixture/test-fixture-mocha.js"></script>
+
+  <link rel="import" href="../../test-fixture/test-fixture.html">
 
   <!-- Step 1: import the element to test -->
   <link rel="import" href="../i18n-msg.html">
 </head>
 <body>
 
-  <i18n-msg msgid="days" id="days">PLACEHOLDER_STRING</i18n-msg>
-  <i18n-msg msgid="UNKNOWN_MSG_ID" id="days2">PLACEHOLDER_STRING</i18n-msg>
+  <test-fixture id="fixture1">
+    <template>
+      <i18n-msg msgid="days" id="days">PLACEHOLDER_STRING</i18n-msg>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="fixture2">
+    <template>
+      <i18n-msg msgid="UNKNOWN_MSG_ID" id="days2">PLACEHOLDER_STRING</i18n-msg>
+    </template>
+  </test-fixture>
 
   <script>
 
@@ -23,7 +35,7 @@
 
     suite('<i18n-element>', function() {
 
-      var el = document.querySelector('#days');
+      var el = fixture('fixture1');
       var expected = 'días';
 
       test('defines the "msgid" property', function() {
@@ -67,8 +79,7 @@
     });
 
     suite('<i18n-element> other', function() {
-
-      var el = document.querySelector('#days2');
+      var el = fixture('fixture2');
 
       test('an unknown message id is not replaced', function() {
         assert.equal(el.textContent, 'PLACEHOLDER_STRING');

@@ -5,15 +5,23 @@
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
   <title>i18n-msg</title>
 
-  <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
+  <script src="../../webcomponentsjs/webcomponents.js"></script>
   <script src="../../web-component-tester/browser.js"></script>
+  <script src="../../test-fixture/test-fixture-mocha.js"></script>
+
+  <link rel="import" href="../../test-fixture/test-fixture.html">
 
   <!-- Step 1: import the element to test -->
   <link rel="import" href="../i18n-msg.html">
 </head>
 <body>
 
-  <i18n-msg msgid="days" id="days">PLACEHOLDER_STRING</i18n-msg>
+  <test-fixture id="fixture">
+    <template>
+      <i18n-msg msgid="days" id="days">PLACEHOLDER_STRING</i18n-msg>
+    </template>
+  </test-fixture>
+
   <!-- <i18n-msg msgid="days" id="days"
             messages-url="path/to/locales">PLACEHOLDER_STRING</i18n-msg> -->
 
@@ -24,7 +32,7 @@
 
     suite('<i18n-element> advanced', function() {
 
-      var el = document.querySelector('#days');
+      var el = fixture('fixture');
 
       // test('messagesUrl is overridden by I18nMsg.url', function() {
       //   assert.equal(el.messagesUrl, 'path/to/locales');
@@ -38,8 +46,10 @@
       // });
 
       test('Updating I18nMsg.lang', function(done) {
-        // document.documentElement.lang = 'fr';
-        I18nMsg.lang = 'fr';
+
+        I18nMsg.lang = 'fr'; // document.documentElement.lang = 'fr';
+        Platform.performMicrotaskCheckpoint();
+
         setTimeout(function() {
           assert.equal(el.textContent, 'journées');
           done();

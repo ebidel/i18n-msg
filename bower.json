@@ -22,7 +22,7 @@
     "/tests/"
   ],
   "dependencies": {
-    "polymer": "Polymer/polymer#^1.2.3",
+    "polymer": "Polymer/polymer#^1.4.0",
     "observe-js": "Polymer/observe-js"
   },
   "devDependencies": {
