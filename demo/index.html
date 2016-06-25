@@ -28,9 +28,17 @@
 <template is="dom-bind">
   <i18n-msg msgid="days" msg="{{days}}"></i18n-msg>
   <p>Example of updating an attribute: <input id="input" placeholder="[[days]]"></p>
+     
+  <p>Example of placeholders:</p>
+  <i18n-msg msgid="welcome" placeholders='["John","Placeholders"]'>Default Welcome Message</i18n-msg>
+    
 </template>
 
 <p>Example of dynamically created element: <span id="dynamic"></span></p>
+
+
+
+
 
 <script>
   var selector = document.querySelector('#selector');
@@ -57,6 +65,8 @@
     document.querySelector('#dynamic').appendChild(el);
   });
 </script>
+
+
 
 <p>Example of an element using the <code>i18n-msg-behavior</code>:</p>
 

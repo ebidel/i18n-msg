@@ -27,6 +27,12 @@
       <i18n-msg msgid="UNKNOWN_MSG_ID" id="days2">PLACEHOLDER_STRING</i18n-msg>
     </template>
   </test-fixture>
+  
+  <test-fixture id="fixture3">
+    <template>
+      <i18n-msg msgid="welcome" id="welcome" placeholders='["Shane","Messages"]'>PLACEHOLDER_STRING</i18n-msg>
+    </template>
+  </test-fixture>
 
   <script>
 
@@ -89,6 +95,20 @@
         var el2 = document.createElement('i18n-msg');
         el2.msgid = 'minutes';
         assert.equal(el2.textContent, 'minutos');
+      });
+
+    });
+
+    suite('<i18n-element>', function() {
+      var el = fixture('fixture3');
+
+      test('uses placeholders', function() {
+        assert.equal(el.textContent, 'Bienvenido Shane al mundo de la i18n Messages');
+      });
+
+      test('updates message when placeholders change', function() {
+        el.set('placeholders',["John","Placeholders"]);
+        assert.equal(el.textContent, 'Bienvenido John al mundo de la i18n Placeholders');
       });
 
     });
