@@ -15,7 +15,7 @@
     "internationalization"
   ],
   "main": "i18n-msg.html",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "homepage": "https://github.com/ebidel/i18n-msg/",
   "ignore": [
     "/.*",
