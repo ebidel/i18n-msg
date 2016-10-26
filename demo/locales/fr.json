@@ -10,5 +10,19 @@
   "minutes": {
     "description": "...",
     "message": "minutes"
+  },
+  "welcome": {
+    "description": "...",
+    "message": "Bienvenue $name$ dans le monde de i18n $feature$",
+    "placeholders":{
+      "name":{
+        "content":"$1",
+        "example":"John"
+      },
+      "feature":{
+        "content":"$2",
+        "example":"Placeholders"
+      }
+    }    
   }
 }

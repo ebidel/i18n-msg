@@ -48,6 +48,28 @@ If an appropriate message file can't be found, the `textContent` of the element 
 
     <i18n-msg msgid="unknownmsgid">fallback text</i18n-msg>
 
+### Placeholders
+ 
+ It's possible to insert text within the message which requires no translation (e.g: names, dates, numbers).
+ To make available the use of placeholders the message must contain placeholders in Chrome.i18n format ($name$) whenever a parameter
+ should be used, and to use these add the attribute "placeholders" having value array. Example:
+
+    "error": {
+        "message": "Error: $details$",
+        "description": "Generic error template. Expects error parameter to be passed in.",
+        "placeholders": {
+            "details": {
+                "content": "$1",
+                "example": "Failed to fetch RSS feed."
+            }
+       }
+    }
+
+
+    <i18-msg msgid="error" placeholders='["Failed to fetch data."]'></i18n-msg>
+
+ It's also possible to use {{}} and [[]] within the placeholders.
+
 ### Full example
 
     <html lang="es">
@@ -67,7 +89,7 @@ If an appropriate message file can't be found, the `textContent` of the element 
 
     // Get a message by an id:
     document.querySelector('i18n-msg').getMsg('days');
-
+ 
 @demo
 -->
 <dom-module id="i18n-msg"></dom-module>
@@ -96,7 +118,20 @@ If an appropriate message file can't be found, the `textContent` of the element 
         type: String,
         value: null,
         notify: true
-      }
+      },
+       /**
+        * Placeholders used to insert within the message if it contains replacement
+        * patterns to switch with. To use this feature you must include the "placeholders"
+        * attribute and use '' for the array and "" for each element.
+        * Example: placeholders = '["John Doe","Seattle"]'
+        */
+       placeholders: {
+         type: Array,
+         value: function() {
+             return [];
+         },
+         observer: '_placeholdersChanged'
+       },
     },
 
     /**
@@ -112,23 +147,51 @@ If an appropriate message file can't be found, the `textContent` of the element 
 
       return msg;
     },
-
+    _placeholdersChanged: function() {
+      if (this.language && this.locales[this.language] && this.placeholders) {
+        this._updateMessages(this);
+      }
+    },
+    _getInterpolatedMsg: function() {
+      if (this.locales && this.locales[this.language]) {
+        var msg = this.locales[this.language][this.msgid];
+        if (msg && msg.message) {
+          var message = msg.message;
+          var placeholders = msg.placeholders;
+          var phData = this.placeholders;
+          if ((placeholders) && (phData)) {
+            var content, pos;
+            for (var p in placeholders) {
+              content = placeholders[p].content;
+              if (content[0] == '$') {
+                pos = content.substring(1, content.length);
+                if (!isNaN(pos)) {
+                  content = (phData.length < pos) ? '' : phData[pos - 1];
+                }
+              }
+              message = message.split('$' + p + '$').join(content);
+            }
+          }
+          return message;   
+        }
+      }
+      return null;
+    },
     _updateMessages: function() {
       if (this.locales && this.locales[this.language]) {
         if (!this.msgid in this.locales[this.language]) {
           console.warn(this.localName + ': "' + this.msgid + '" message id was not found in ' + url);
           return;
         }
-        var msg = this.locales[this.language][this.msgid];
-        if (msg && msg.message) {
-          this.msg = msg.message;
-          this.innerHTML = msg.message;
+        var message = this._getInterpolatedMsg();
+        if(message) {  
+          this.msg = message;
+          this.innerHTML = message;
         }
       }
     },
-
     attached: function() {
-      var msg = this.getMsg();
+      var msg = this._getInterpolatedMsg();
       if (msg) {
         this.msg = msg;
         this.innerHTML = msg;
